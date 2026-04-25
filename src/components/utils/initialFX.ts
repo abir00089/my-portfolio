@@ -57,7 +57,7 @@ export function initialFX() {
     mainElements[0].classList.add("main-active");
     gsap.to(mainElements[0], {
       opacity: 1,
-      duration: 1.2,
+      duration: 0.8,
       ease: "power2.out",
     });
   }
@@ -68,12 +68,12 @@ export function initialFX() {
       smoother.paused(false);
     }
     document.body.style.overflowY = "auto";
-  }, 1000);
+  }, 500);
 
   gsap.to("body", {
     backgroundColor: "#0a0e17",
-    duration: 1.2,
-    delay: 0.5,
+    duration: 0.8,
+    delay: 0.2,
     ease: "sine.inOut",
   });
 
@@ -90,12 +90,12 @@ export function initialFX() {
     { opacity: 0, y: 100, filter: "blur(10px)" },
     {
       opacity: 1,
-      duration: 1.5,
+      duration: 1.0,
       filter: "blur(0px)",
       ease: "power4.out",
       y: 0,
-      stagger: 0.03,
-      delay: 0.2,
+      stagger: 0.02,
+      delay: 0.1,
     }
   );
 
@@ -108,12 +108,12 @@ export function initialFX() {
     { opacity: 0, y: 80, filter: "blur(5px)" },
     {
       opacity: 1,
-      duration: 1.2,
+      duration: 0.8,
       filter: "blur(0px)",
       ease: "power3.inOut",
       y: 0,
-      stagger: 0.025,
-      delay: 0.3,
+      stagger: 0.02,
+      delay: 0.2,
     }
   );
 
@@ -122,10 +122,10 @@ export function initialFX() {
     { opacity: 0, y: 30 },
     {
       opacity: 1,
-      duration: 1.2,
+      duration: 0.8,
       ease: "power1.inOut",
       y: 0,
-      delay: 0.8,
+      delay: 0.6,
     }
   );
 
@@ -134,7 +134,7 @@ export function initialFX() {
     { opacity: 0 },
     {
       opacity: 1,
-      duration: 1.2,
+      duration: 0.8,
       ease: "power1.inOut",
       delay: 0.1,
     }
