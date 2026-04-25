@@ -19,39 +19,52 @@ export let smoother: Smoother;
 const Navbar = () => {
   const homeHref = `${assetUrl("")}#`;
   useEffect(() => {
-    // Initialize Lenis for premium smooth scrolling
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-    });
+    const isMobile = window.innerWidth <= 1024;
+    let lenis: Lenis | null = null;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    if (!isMobile) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+      });
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+      lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.lagSmoothing(0);
+      gsap.ticker.add((time) => {
+        lenis?.raf(time * 1000);
+      });
 
-    // Map the global 'smoother' object to Lenis methods
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // Map the global 'smoother' object to Lenis or Native methods
     smoother = {
       scrollTop: (value: number) => {
-        lenis.scrollTo(value, { immediate: true });
+        if (lenis) lenis.scrollTo(value, { immediate: true });
+        else window.scrollTo(0, value);
       },
       scrollTo: (target: string, _smooth?: boolean, _position?: string) => {
-        lenis.scrollTo(target);
+        if (lenis) lenis.scrollTo(target);
+        else {
+          const el = document.querySelector(target);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
       },
       paused: (val: boolean) => {
-        if (val) lenis.stop();
-        else lenis.start();
+        if (lenis) {
+          if (val) lenis.stop();
+          else lenis.start();
+        }
       },
     };
 
     // Initial state
-    smoother.scrollTop(0);
-    smoother.paused(true);
+    if (!isMobile) {
+      smoother.scrollTop(0);
+      smoother.paused(true);
+    }
 
     const links = document.querySelectorAll(".header ul a");
     const clickHandlers: Array<{ element: HTMLAnchorElement; handler: (e: Event) => void }> = [];
