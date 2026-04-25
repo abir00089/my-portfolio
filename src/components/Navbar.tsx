@@ -19,52 +19,40 @@ export let smoother: Smoother;
 const Navbar = () => {
   const homeHref = `${assetUrl("")}#`;
   useEffect(() => {
-    const isMobile = window.innerWidth <= 1024;
-    let lenis: Lenis | null = null;
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      touchMultiplier: 1.5, // Slightly more responsive on mobile
+    });
 
-    if (!isMobile) {
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: "vertical",
-        gestureOrientation: "vertical",
-      });
+    lenis.on("scroll", ScrollTrigger.update);
 
-      lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
 
-      gsap.ticker.add((time) => {
-        lenis?.raf(time * 1000);
-      });
+    gsap.ticker.lagSmoothing(0);
 
-      gsap.ticker.lagSmoothing(0);
-    }
-
-    // Map the global 'smoother' object to Lenis or Native methods
+    // Map the global 'smoother' object to Lenis methods
     smoother = {
       scrollTop: (value: number) => {
-        if (lenis) lenis.scrollTo(value, { immediate: true });
-        else window.scrollTo(0, value);
+        lenis.scrollTo(value, { immediate: true });
       },
       scrollTo: (target: string, _smooth?: boolean, _position?: string) => {
-        if (lenis) lenis.scrollTo(target);
-        else {
-          const el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }
+        lenis.scrollTo(target);
       },
       paused: (val: boolean) => {
-        if (lenis) {
-          if (val) lenis.stop();
-          else lenis.start();
-        }
+        if (val) lenis.stop();
+        else lenis.start();
       },
     };
 
     // Initial state
-    if (!isMobile) {
-      smoother.scrollTop(0);
-      smoother.paused(true);
-    }
+    smoother.scrollTop(0);
+    smoother.paused(true);
 
     const links = document.querySelectorAll(".header ul a");
     const clickHandlers: Array<{ element: HTMLAnchorElement; handler: (e: Event) => void }> = [];
