@@ -331,8 +331,9 @@ h2.landing-info-h2 {
   .landing-intro h1,
   .landing-info h2,
   h2.landing-info-h2 {
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: nowrap;
   }
 }
 
