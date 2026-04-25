@@ -10,7 +10,7 @@
 
   "scripts": {
     "dev": "vite --host",
-    "build": "npx tsc && vite build",
+    "build": "node node_modules/typescript/bin/tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
