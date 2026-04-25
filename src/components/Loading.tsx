@@ -42,8 +42,8 @@ const Loading = ({ percent }: { percent: number }) => {
           }
           setTimeout(() => {
             setIsLoading(false);
-          }, 800);
-        }, 900);
+          }, 500);
+        }, 400);
       });
     }
   }, [isLoaded]);
