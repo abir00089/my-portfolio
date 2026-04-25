@@ -33,7 +33,8 @@ const Scene = () => {
         powerPreference: "high-performance",
       });
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const isMobile = window.innerWidth <= 1024;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.2 : 2));
       renderer.setSize(container.width, container.height);
 
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
