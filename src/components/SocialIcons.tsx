@@ -9,6 +9,11 @@ import HoverLinks from "./HoverLinks";
 
 const SocialIcons = () => {
   useEffect(() => {
+    // Disable hover effects on touch devices
+    if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
+      return;
+    }
+
     const social = document.getElementById("social");
     if (!social) return;
     const listeners: Array<() => void> = [];
