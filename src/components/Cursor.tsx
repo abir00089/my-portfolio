@@ -5,6 +5,11 @@ import gsap from "gsap";
 const Cursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    // Disable custom cursor on touch devices for better performance
+    if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
+      return;
+    }
+
     const cursor = cursorRef.current;
     if (!cursor) return;
 
