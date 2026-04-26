@@ -89,10 +89,11 @@ const Scene = () => {
             character.getObjectByName("screenlight") || null;
 
           progress.loaded().then(() => {
+            // Reduced delay for a snappier feel
             setTimeout(() => {
               light.turnOnLights();
               animations.startIntro();
-            }, 2500);
+            }, 300);
           });
 
           window.addEventListener("resize", resizeHandler);
@@ -102,17 +103,28 @@ const Scene = () => {
       let mouse = { x: 0, y: 0 },
         interpolation = { x: 0.1, y: 0.2 };
 
+      // Optimized mouse move with requestAnimationFrame
+      let mouseFrameId: number;
       const onMouseMove = (event: MouseEvent) => {
-        handleMouseMove(event, (x, y) => (mouse = { x, y }));
+        if (mouseFrameId) cancelAnimationFrame(mouseFrameId);
+        mouseFrameId = requestAnimationFrame(() => {
+          handleMouseMove(event, (x, y) => (mouse = { x, y }));
+        });
       };
+      
       const onVisibilityChange = () => {
         tabActive = !document.hidden;
       };
 
       let debounce: number | undefined;
       let touchTarget: HTMLElement | null = null;
-      const onTouchMove = (e: TouchEvent) =>
-        handleTouchMove(e, (x, y) => (mouse = { x, y }));
+      
+      const onTouchMove = (e: TouchEvent) => {
+        if (mouseFrameId) cancelAnimationFrame(mouseFrameId);
+        mouseFrameId = requestAnimationFrame(() => {
+          handleTouchMove(e, (x, y) => (mouse = { x, y }));
+        });
+      };
 
       const onTouchStart = (event: TouchEvent) => {
         touchTarget = event.target as HTMLElement;
@@ -172,7 +184,31 @@ const Scene = () => {
         isMounted = false;
 
         cancelAnimationFrame(frameId);
+        cancelAnimationFrame(mouseFrameId);
         clearTimeout(debounce);
+
+        // Deeper cleanup for better performance
+        scene.traverse((object: any) => {
+          if (object.isMesh) {
+            object.geometry.dispose();
+            if (object.material.isMaterial) {
+              cleanMaterial(object.material);
+            } else {
+              for (const material of object.material) {
+                cleanMaterial(material);
+              }
+            }
+          }
+        });
+
+        function cleanMaterial(material: any) {
+          material.dispose();
+          for (const key of Object.keys(material)) {
+            if (material[key] && typeof material[key].dispose === "function") {
+              material[key].dispose();
+            }
+          }
+        }
 
         scene.clear();
         renderer.dispose();
