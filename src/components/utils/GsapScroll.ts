@@ -5,16 +5,23 @@ export function setCharTimeline(
   character: THREE.Object3D<THREE.Object3DEventMap> | null,
   camera: THREE.PerspectiveCamera
 ) {
-  let intensity: number = 0;
-  setInterval(() => {
-    intensity = Math.random();
-  }, 200);
+  let intensity = { value: 0 };
+  gsap.to(intensity, {
+    value: 1,
+    duration: 0.5,
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut",
+    onUpdate: () => {
+      intensity.value = Math.random();
+    }
+  });
   const tl1 = gsap.timeline({
     scrollTrigger: {
       trigger: ".landing-section",
       start: "top top",
       end: "bottom top",
-      scrub: true,
+      scrub: 1,
       invalidateOnRefresh: true,
     },
   });
@@ -23,7 +30,7 @@ export function setCharTimeline(
       trigger: ".about-section",
       start: "center 55%",
       end: "bottom top",
-      scrub: true,
+      scrub: 1,
       invalidateOnRefresh: true,
     },
   });
@@ -32,7 +39,7 @@ export function setCharTimeline(
       trigger: ".whatIDO",
       start: "top top",
       end: "bottom top",
-      scrub: true,
+      scrub: 1,
       invalidateOnRefresh: true,
     },
   });
@@ -53,8 +60,8 @@ export function setCharTimeline(
       object.material.opacity = 0;
       object.material.emissive.set("#B0F5EA");
       gsap.timeline({ repeat: -1, repeatRefresh: true }).to(object.material, {
-        emissiveIntensity: () => intensity * 8,
-        duration: () => Math.random() * 0.6,
+        emissiveIntensity: () => intensity.value * 8,
+        duration: () => 0.2 + Math.random() * 0.4,
         delay: () => Math.random() * 0.1,
       });
       screenLight = object;
@@ -138,7 +145,7 @@ export function setAllTimeline() {
       trigger: ".career-section",
       start: "top 30%",
       end: "100% center",
-      scrub: true,
+      scrub: 1,
       invalidateOnRefresh: true,
     },
   });
