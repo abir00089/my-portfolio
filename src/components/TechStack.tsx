@@ -203,14 +203,16 @@ const TechStack = () => {
     );
   }, []);
 
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <div className="techstack">
       <h2> My Techstack</h2>
 
       <Canvas
         shadows
-        dpr={1}
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        dpr={isMobile ? 1 : [1, 2]}
+        gl={{ alpha: true, stencil: false, depth: false, antialias: !isMobile }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
         onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
         className="tech-canvas"
@@ -242,7 +244,7 @@ const TechStack = () => {
           environmentRotation={[0, 4, 2]}
         />
         <EffectComposer enableNormalPass={false}>
-          <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
+          {!isMobile && <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />}
         </EffectComposer>
       </Canvas>
     </div>
