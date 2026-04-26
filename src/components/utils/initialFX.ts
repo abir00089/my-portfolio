@@ -29,21 +29,15 @@ class SplitText {
     elements.forEach((el) => {
       const text = el.textContent || "";
       el.innerHTML = "";
-
-      const fragment = document.createDocumentFragment();
       const chars = text.split("");
       chars.forEach((char) => {
         const span = document.createElement("span");
         span.textContent = char;
         span.style.display = "inline-block";
-        span.style.willChange = "transform, opacity"; // Hint for browser optimization
-        if (char === " ") {
-          span.style.whiteSpace = "pre";
-        }
-        fragment.appendChild(span);
+        if (char === " ") span.style.whiteSpace = "pre";
+        el.appendChild(span);
         this.chars.push(span);
       });
-      el.appendChild(fragment);
     });
   }
 
