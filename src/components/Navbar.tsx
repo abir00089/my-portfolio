@@ -54,7 +54,7 @@ const Navbar = () => {
 
     // Initial state
     smoother.scrollTop(0);
-    smoother.paused(true);
+    smoother.paused(false);
 
     const links = document.querySelectorAll(".header ul a");
     const clickHandlers: Array<{ element: HTMLAnchorElement; handler: (e: Event) => void }> = [];
