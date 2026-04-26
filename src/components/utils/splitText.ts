@@ -19,11 +19,13 @@ class SplitText {
     element.innerHTML = "";
 
     // ✅ improved split (word + char safe spacing)
+    const fragment = document.createDocumentFragment();
     const words = text.split(" ");
     words.forEach((word) => {
       const wordSpan = document.createElement("span");
       wordSpan.style.display = "inline-block";
       wordSpan.style.whiteSpace = "pre";
+      wordSpan.style.willChange = "transform, opacity";
 
       const chars = word.split("");
       chars.forEach((char) => {
@@ -34,10 +36,11 @@ class SplitText {
         this.chars.push(charSpan);
       });
 
-      this.el.appendChild(wordSpan);
-      this.el.appendChild(document.createTextNode(" "));
+      fragment.appendChild(wordSpan);
+      fragment.appendChild(document.createTextNode(" "));
       this.words.push(wordSpan);
     });
+    this.el.appendChild(fragment);
   }
 
   revert() {
@@ -57,8 +60,11 @@ gsap.registerPlugin(ScrollTrigger);
 export default function setSplitText() {
   ScrollTrigger.config({ ignoreMobileResize: true });
 
-  // ✅ clean old triggers before creating new ones
-  ScrollTrigger.getAll().forEach((t) => t.kill());
+  // ✅ Only refresh relevant triggers instead of killing all
+  const existingTriggers = ScrollTrigger.getAll().filter(t => 
+    t.vars.trigger && (t.vars.trigger as HTMLElement).classList?.contains('para-container')
+  );
+  existingTriggers.forEach(t => t.kill());
 
   if (window.innerWidth < 900) return;
 
