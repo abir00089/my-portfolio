@@ -48,7 +48,7 @@ a:hover {
 }
 
 main {
-  opacity: 0;
+  opacity: 1;
   transition: 0.3s;
 }
 
