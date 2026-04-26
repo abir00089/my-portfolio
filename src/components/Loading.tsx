@@ -17,11 +17,11 @@ const Loading = ({ percent }: { percent: number }) => {
     
     const loadedTimer = setTimeout(() => {
       setLoaded(true);
-    }, 600);
+    }, 300);
 
     const isLoadedTimer = setTimeout(() => {
       setIsLoaded(true);
-    }, 1600);
+    }, 800);
 
     return () => {
       clearTimeout(loadedTimer);
@@ -35,6 +35,7 @@ const Loading = ({ percent }: { percent: number }) => {
     if (isLoaded) {
       setClicked(true);
       import("./utils/initialFX").then((module) => {
+        // Reduced delays for faster entry
         setTimeout(() => {
           setIsExiting(true);
           if (module.initialFX) {
@@ -42,8 +43,8 @@ const Loading = ({ percent }: { percent: number }) => {
           }
           setTimeout(() => {
             setIsLoading(false);
-          }, 500);
-        }, 400);
+          }, 300);
+        }, 200);
       });
     }
   }, [isLoaded]);
