@@ -17,14 +17,22 @@ const MainContainer = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
+    let timeoutId: number;
     const resizeHandler = () => {
-      setSplitText();
-      setIsDesktopView(window.innerWidth > 1024);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setSplitText();
+        setIsDesktopView(window.innerWidth > 1024);
+      }, 200);
     };
-    resizeHandler();
+    
+    // Initial call
+    setSplitText();
+    
     window.addEventListener("resize", resizeHandler);
     return () => {
       window.removeEventListener("resize", resizeHandler);
+      clearTimeout(timeoutId);
     };
   }, []);
 
